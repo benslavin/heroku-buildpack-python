@@ -1,11 +1,12 @@
 set +e
 # Install dependencies with Pip.
 bpwatch start pip_uninstall
+cd $BUILD_DIR
 if [[ -f .heroku/python/requirements-declared.txt ]]; then
 
   cp .heroku/python/requirements-declared.txt requirements-declared.txt
 
-  pip-diff --stale requirements-declared.txt requirements.txt --exclude setuptools pip > .heroku/python/requirements-stale.txt
+  pip-diff --stale requirements-declared.txt $DJANGO_DIR/requirements.txt --exclude setuptools pip > .heroku/python/requirements-stale.txt
 
   rm -fr requirements-declared.txt
 
@@ -14,5 +15,6 @@ if [[ -f .heroku/python/requirements-declared.txt ]]; then
     /app/.heroku/python/bin/pip uninstall -r .heroku/python/requirements-stale.txt -y --exists-action=w | cleanup | indent
   fi
 fi
+cd $DJANGO_DIR
 bpwatch stop pip_uninstall
 set -e
