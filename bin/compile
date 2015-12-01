@@ -16,6 +16,7 @@ export PATH=:/usr/local/bin:$PATH
 BIN_DIR=$(cd $(dirname $0); pwd) # absolute path
 ROOT_DIR=$(dirname $BIN_DIR)
 BUILD_DIR=$1
+DJANGO_DIR=$BUILD_DIR/django
 CACHE_DIR=$2
 ENV_DIR=$3
 
@@ -82,13 +83,14 @@ fi
 # Set new context.
 ORIG_BUILD_DIR=$BUILD_DIR
 BUILD_DIR=$APP_DIR
+DJANGO_DIR=$BUILD_DIR/django
 
 # Set up outputs under new context
 PROFILE_PATH="$BUILD_DIR/.profile.d/python.sh"
 WEBCONCURRENCY_PROFILE_PATH="$BUILD_DIR/.profile.d/python.webconcurrency.sh"
 
 # We'll need to send these statics to other scripts we `source`.
-export BUILD_DIR CACHE_DIR BIN_DIR PROFILE_PATH
+export BUILD_DIR CACHE_DIR BIN_DIR PROFILE_PATH DJANGO_DIR
 
 # Prepend proper path buildpack use.
 export PATH=$BUILD_DIR/.heroku/python/bin:$BUILD_DIR/.heroku/vendor/bin:$PATH
@@ -101,7 +103,7 @@ export LD_LIBRARY_PATH=/app/.heroku/vendor/lib:$BUILD_DIR/.heroku/vendor/lib:/ap
 export PKG_CONFIG_PATH=/app/.heroku/vendor/lib/pkg-config:$BUILD_DIR/.heroku/vendor/lib/pkg-config:/app/.heroku/python/lib/pkg-config
 
 # Switch to the repo's context.
-cd $BUILD_DIR
+cd $DJANGO_DIR
 
 # Experimental pre_compile hook.
 bpwatch start pre_compile
@@ -202,6 +204,11 @@ set-default-env PYTHONPATH /app/
 
 # Install sane-default script for WEB_CONCURRENCY environment variable.
 cp $ROOT_DIR/vendor/python.webconcurrency.sh $WEBCONCURRENCY_PROFILE_PATH
+
+# Overriding Procfile
+echo "Overriding Procfile with Django Procfile"
+rm $BUILD_DIR/Procfile
+cp $DJANGO_DIR/Procfile $BUILD_DIR/Procfile
 
 
 # Experimental post_compile hook.

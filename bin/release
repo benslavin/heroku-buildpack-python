@@ -3,8 +3,9 @@
 
 BIN_DIR=$(cd $(dirname $0); pwd) # absolute path
 BUILD_DIR=$1
+DJANGO_DIR=$BUILD_DIR/django
 
-MANAGE_FILE=$(cd $BUILD_DIR && find . -maxdepth 3 -type f -name 'manage.py' | head -1)
+MANAGE_FILE=$(cd $DJANGO_DIR && find . -maxdepth 3 -type f -name 'manage.py' | head -1)
 MANAGE_FILE=${MANAGE_FILE:2}
 
 cat <<EOF
