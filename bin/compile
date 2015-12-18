@@ -179,8 +179,8 @@ source $BIN_DIR/steps/pylibmc
 # Libffi support.
 source $BIN_DIR/steps/cryptography
 
-# GDAL support.
-source $BIN_DIR/steps/gdal
+# GeoDjango support.
+source $BIN_DIR/steps/geodjango
 
 # Install dependencies with Pip.
 source $BIN_DIR/steps/pip-install
